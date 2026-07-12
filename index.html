@@ -24,6 +24,15 @@
   *{box-sizing:border-box;}
   ::selection{background:var(--pink);color:#0e0e13;}
   html{scroll-behavior:smooth;}
+  .container{
+    width:70%;
+    max-width:1000px;
+    min-width:0;
+    margin:0 auto;
+  }
+  @media (max-width:900px){
+    .container{width:92%;}
+  }
   body{
     margin:0;
     background:
@@ -39,7 +48,7 @@
 
   /* ---------- header ---------- */
   header{
-    padding:64px 6vw 40px;
+    padding:64px 0 40px;
     border-bottom:1px solid var(--border);
     position:relative;
     overflow:hidden;
@@ -79,17 +88,18 @@
 
   .stats{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
     gap:1px;
     background:var(--border);
     border:1px solid var(--border);
     border-radius:var(--radius);
     overflow:hidden;
-    max-width:760px;
+    width:100%;
   }
   .stat{
     background:var(--surface);
     padding:16px 18px;
+    min-width:0;
   }
   .stat .n{
     font-family:'IBM Plex Mono',monospace;
@@ -97,6 +107,9 @@
     font-weight:600;
     color:var(--text);
     display:block;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
   .stat .l{
     font-size:11px;
@@ -115,7 +128,9 @@
     background:rgba(14,14,19,0.92);
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--border);
-    padding:16px 6vw;
+    padding:16px 0;
+  }
+  .controls .container{
     display:flex;
     flex-wrap:wrap;
     gap:10px;
@@ -155,25 +170,118 @@
   }
 
   /* ---------- grid ---------- */
-  main{padding:34px 6vw 80px;}
+  main{padding:34px 0 80px;}
   .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-    gap:16px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
   }
+
+  /* section headers within the list (folder browser / expanded genre) */
+  .section-row{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:6px;
+    flex-wrap:wrap;
+  }
+  .section-title{
+    font-size:20px;
+    font-weight:600;
+    margin:0;
+  }
+  .section-title.cap{text-transform:capitalize;}
+  .section-meta{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--text-faint);
+    white-space:nowrap;
+  }
+  .back-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:6px;
+  }
+  .back-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--text-dim);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    padding:8px 14px;
+    border-radius:7px;
+    cursor:pointer;
+    flex:none;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .back-btn:hover{color:var(--cyan);border-color:var(--cyan);}
+
+  /* ---------- folder cards ---------- */
+  .folder-card{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:12px 18px;
+    cursor:pointer;
+    transition:border-color .15s ease, transform .15s ease, background .15s ease;
+  }
+  .folder-card:hover{border-color:var(--pink);transform:translateY(-2px);background:var(--surface-2);}
+  .folder-thumbs{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    grid-template-rows:repeat(2,1fr);
+    width:60px;height:60px;
+    border-radius:8px;
+    overflow:hidden;
+    flex:none;
+    gap:1px;
+    background:var(--border);
+  }
+  .folder-thumbs img{width:100%;height:100%;object-fit:cover;display:block;opacity:0.85;}
+  .folder-thumbs .empty{background:var(--surface-2);}
+  .folder-info{flex:1;min-width:0;}
+  .folder-title{
+    font-size:17px;
+    font-weight:600;
+    margin:0 0 3px;
+    text-transform:capitalize;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .folder-count{font-size:11px;color:var(--text-faint);}
+  .folder-arrow{
+    color:var(--text-faint);
+    font-size:20px;
+    flex:none;
+    transition:transform .15s ease, color .15s ease;
+  }
+  .folder-card:hover .folder-arrow{color:var(--pink);transform:translateX(3px);}
+
+  /* ---------- track cards (row layout) ---------- */
   .card{
     background:var(--surface);
     border:1px solid var(--border);
     border-radius:var(--radius);
     overflow:hidden;
     display:flex;
-    flex-direction:column;
+    flex-direction:row;
+    align-items:stretch;
     transition:border-color .15s ease, transform .15s ease;
   }
   .card:hover{border-color:var(--cyan);transform:translateY(-2px);}
   .card .art{
     position:relative;
-    aspect-ratio:16/7;
+    width:180px;
+    flex:none;
     background:#000;
     overflow:hidden;
   }
@@ -186,8 +294,30 @@
   .art::after{
     content:'';
     position:absolute;inset:0;
-    background:linear-gradient(180deg, transparent 40%, rgba(14,14,19,0.9) 100%);
+    background:linear-gradient(180deg, transparent 40%, rgba(14,14,19,0.85) 100%);
   }
+  .play-overlay{
+    position:absolute;inset:0;z-index:3;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .play-overlay .icon-btn{
+    width:42px;height:42px;
+    border-radius:50%;
+    background:rgba(14,14,19,0.55);
+    border:1px solid rgba(255,255,255,0.28);
+    backdrop-filter:blur(3px);
+    opacity:0;
+    transform:scale(0.85);
+    transition:opacity .15s ease, transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .play-overlay .icon-btn svg{width:16px;height:16px;}
+  .card:hover .play-overlay .icon-btn,
+  .play-overlay .icon-btn.playing{
+    opacity:1;
+    transform:scale(1);
+  }
+  .play-overlay .icon-btn:hover{background:rgba(255,77,148,0.8);border-color:var(--pink);color:#fff;}
+  .play-overlay .icon-btn.playing{background:rgba(255,77,148,0.85);border-color:var(--pink);color:#fff;}
   .catalog-no{
     position:absolute;top:8px;left:10px;z-index:2;
     font-family:'IBM Plex Mono',monospace;
@@ -215,7 +345,7 @@
   .status-qualified,.status-pending{background:rgba(255,255,255,0.08);color:var(--text-dim);}
   .status-unknown{background:rgba(255,255,255,0.05);color:var(--text-faint);}
 
-  .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1;}
+  .body{padding:14px 18px;display:flex;flex-direction:column;justify-content:center;gap:8px;flex:1;min-width:0;}
   .title{
     font-size:16px;
     font-weight:600;
@@ -232,6 +362,7 @@
     align-items:center;
     gap:10px;
     margin-top:2px;
+    flex-wrap:wrap;
   }
   .bpm-gauge{flex:none;display:flex;align-items:center;gap:6px;}
   .bpm-gauge svg{display:block;}
@@ -256,12 +387,11 @@
     max-width:130px;
   }
   .footer-row{
-    margin-top:auto;
+    margin-top:4px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding-top:10px;
-    border-top:1px solid var(--border);
+    gap:10px;
   }
   .fav-date{
     font-family:'IBM Plex Mono',monospace;
@@ -284,9 +414,15 @@
   .icon-btn.playing{color:var(--pink);border-color:var(--pink);}
   .icon-btn svg{width:13px;height:13px;}
 
+  @media (max-width:640px){
+    .card{flex-direction:column;}
+    .card .art{width:100%;height:150px;}
+    .folder-card{padding:12px;}
+  }
+
   /* ---------- states ---------- */
   .state{
-    padding:80px 6vw;
+    padding:80px 0;
     text-align:center;
     color:var(--text-dim);
     font-family:'IBM Plex Mono',monospace;
@@ -322,11 +458,13 @@
   .retry-btn:hover{background:rgba(94,234,212,0.1);}
 
   footer{
-    padding:26px 6vw 40px;
+    padding:26px 0 40px;
     border-top:1px solid var(--border);
     color:var(--text-faint);
     font-family:'IBM Plex Mono',monospace;
     font-size:11px;
+  }
+  footer .container{
     display:flex;
     justify-content:space-between;
     flex-wrap:wrap;
@@ -343,48 +481,55 @@
 <body>
 
 <header>
-  <p class="eyebrow">personal beatmap archive</p>
-  <h1>the crate<em>.</em></h1>
-  <p class="sub">A live pull of everything i've favourited on <span class="mono">osu!</span> — synced from
-    <a class="gist-link" href="https://gist.github.com/vyroxat/f8ed8481b5a1db95814ddaefa8a46f1c" target="_blank" rel="noopener">my gist</a>,
-  </p>
-  <div class="stats" id="stats">
-    <div class="stat"><span class="n">—</span><span class="l">tracks</span></div>
-    <div class="stat"><span class="n">—</span><span class="l">artists</span></div>
-    <div class="stat"><span class="n">—</span><span class="l">avg bpm</span></div>
-    <div class="stat"><span class="n">—</span><span class="l">bpm range</span></div>
-    <div class="stat"><span class="n">—</span><span class="l">top genre</span></div>
+  <div class="container">
+    <p class="eyebrow">personal beatmap archive</p>
+    <h1>the crate<em>.</em></h1>
+    <p class="sub">A live pull of everything i've favourited on <span class="mono">osu!</span> — synced from
+      <a class="gist-link" href="https://gist.github.com/vyroxat/f8ed8481b5a1db95814ddaefa8a46f1c" target="_blank" rel="noopener">my gist</a>.
+    </p>
+    <div class="stats" id="stats">
+      <div class="stat"><span class="n">—</span><span class="l">tracks</span></div>
+      <div class="stat"><span class="n">—</span><span class="l">artists</span></div>
+      <div class="stat"><span class="n">—</span><span class="l">avg bpm</span></div>
+      <div class="stat"><span class="n">—</span><span class="l">bpm range</span></div>
+      <div class="stat"><span class="n">—</span><span class="l">top genre</span></div>
+    </div>
   </div>
 </header>
 
 <div class="controls">
-  <input type="text" id="search" placeholder="search title, artist, tags, source…">
-  <select id="statusFilter"><option value="">all statuses</option></select>
-  <select id="genreFilter"><option value="">all genres</option></select>
-  <select id="sortBy">
-    <option value="fav-desc">newest favourited</option>
-    <option value="fav-asc">oldest favourited</option>
-    <option value="bpm-desc">bpm — high to low</option>
-    <option value="bpm-asc">bpm — low to high</option>
-    <option value="favcount-desc">most favourited (osu!)</option>
-    <option value="playcount-desc">most played (osu!)</option>
-    <option value="title-asc">title a–z</option>
-  </select>
-  <span class="count-badge" id="countBadge"></span>
+  <div class="container">
+    <input type="text" id="search" placeholder="search title, artist, tags, source…">
+    <select id="statusFilter"><option value="">all statuses</option></select>
+    <select id="sortBy">
+      <option value="fav-desc">newest favourited</option>
+      <option value="fav-asc">oldest favourited</option>
+      <option value="bpm-desc">bpm — high to low</option>
+      <option value="bpm-asc">bpm — low to high</option>
+      <option value="favcount-desc">most favourited (osu!)</option>
+      <option value="playcount-desc">most played (osu!)</option>
+      <option value="title-asc">title a–z</option>
+    </select>
+    <span class="count-badge" id="countBadge"></span>
+  </div>
 </div>
 
 <main id="main">
-  <div class="state" id="state">
-    <div class="spin"></div>
-    <div class="big">pulling the crate…</div>
-    <div>fetching gist f8ed8481b5a1db95814ddaefa8a46f1c</div>
+  <div class="container">
+    <div class="state" id="state">
+      <div class="spin"></div>
+      <div class="big">pulling the crate…</div>
+      <div>fetching gist f8ed8481b5a1db95814ddaefa8a46f1c</div>
+    </div>
+    <div class="grid" id="grid" style="display:none;"></div>
   </div>
-  <div class="grid" id="grid" style="display:none;"></div>
 </main>
 
 <footer>
-  <span>data source: <a href="https://gist.github.com/vyroxat/f8ed8481b5a1db95814ddaefa8a46f1c" target="_blank" rel="noopener">gist.github.com/vyroxat</a></span>
-  <span id="lastSynced"></span>
+  <div class="container">
+    <span>data source: <a href="https://gist.github.com/vyroxat/f8ed8481b5a1db95814ddaefa8a46f1c" target="_blank" rel="noopener">gist.github.com/vyroxat</a></span>
+    <span id="lastSynced"></span>
+  </div>
 </footer>
 
 <script>
@@ -399,12 +544,12 @@
   const statsEl = document.getElementById('stats');
   const searchEl = document.getElementById('search');
   const statusFilterEl = document.getElementById('statusFilter');
-  const genreFilterEl = document.getElementById('genreFilter');
   const sortByEl = document.getElementById('sortBy');
   const countBadgeEl = document.getElementById('countBadge');
   const lastSyncedEl = document.getElementById('lastSynced');
 
   let allTracks = [];
+  let activeGenre = null;
   let currentAudio = null;
   let currentPlayBtn = null;
 
@@ -460,7 +605,7 @@
     renderStats();
     render();
     stateEl.style.display = 'none';
-    gridEl.style.display = 'grid';
+    gridEl.style.display = 'flex';
     lastSyncedEl.textContent = 'synced ' + new Date().toLocaleString();
   }
 
@@ -470,12 +615,6 @@
       const o = document.createElement('option');
       o.value = s; o.textContent = s;
       statusFilterEl.appendChild(o);
-    });
-    const genres = [...new Set(allTracks.map(t => t.genre).filter(Boolean))].sort();
-    genres.forEach(g => {
-      const o = document.createElement('option');
-      o.value = g; o.textContent = g;
-      genreFilterEl.appendChild(o);
     });
   }
 
@@ -571,6 +710,7 @@
         ${cover ? `<img src="${cover}" alt="" loading="lazy">` : ''}
         <span class="catalog-no mono">${catalogNo}</span>
         <span class="status-pill mono ${statusClass(status)}">${escapeHtml(status||'unknown')}</span>
+        ${t.preview ? `<div class="play-overlay"><button class="icon-btn play-btn" data-preview="${escapeHtml(t.preview)}" title="preview">${playIcon()}</button></div>` : ''}
       </div>
       <div class="body">
         <p class="title" title="${title}">${title}</p>
@@ -582,7 +722,6 @@
         <div class="footer-row">
           <span class="fav-date mono">♥ ${timeAgo(t.favourited_at)}</span>
           <div class="actions">
-            ${t.preview ? `<button class="icon-btn play-btn" data-preview="${escapeHtml(t.preview)}" title="preview">${playIcon()}</button>` : ''}
             <a class="icon-btn" href="${escapeHtml(t.url)}" target="_blank" rel="noopener" title="open on osu!">${linkIcon()}</a>
           </div>
         </div>
@@ -590,13 +729,41 @@
     </div>`;
   }
 
+  function genreGroups(){
+    const groups = {};
+    allTracks.forEach(t => {
+      const g = (t.genre && t.genre.trim()) ? t.genre : 'Unspecified';
+      (groups[g] = groups[g] || []).push(t);
+    });
+    return groups;
+  }
+
+  function folderCardHtml(genre, tracks){
+    const thumbs = tracks.slice(0, 4).map(t => {
+      const c = (t.covers && (t.covers.list || t.covers.card || t.covers.cover)) || '';
+      return c ? `<img src="${c}" alt="" loading="lazy">` : `<div class="empty"></div>`;
+    });
+    while(thumbs.length < 4) thumbs.push(`<div class="empty"></div>`);
+    return `
+    <div class="folder-card" data-genre="${escapeHtml(genre)}">
+      <div class="folder-thumbs">${thumbs.join('')}</div>
+      <div class="folder-info">
+        <p class="folder-title">${escapeHtml(genre)}</p>
+        <span class="folder-count mono">${tracks.length} track${tracks.length === 1 ? '' : 's'}</span>
+      </div>
+      <span class="folder-arrow">→</span>
+    </div>`;
+  }
+
   function getFiltered(){
     const q = searchEl.value.trim().toLowerCase();
     const statusF = statusFilterEl.value;
-    const genreF = genreFilterEl.value;
     let list = allTracks.filter(t => {
+      if(activeGenre){
+        const g = (t.genre && t.genre.trim()) ? t.genre : 'Unspecified';
+        if(g !== activeGenre) return false;
+      }
       if(statusF && (t.status||'unknown') !== statusF) return false;
-      if(genreF && t.genre !== genreF) return false;
       if(q){
         const hay = [t.title,t.title_unicode,t.artist,t.artist_unicode,t.creator,t.tags,t.source].join(' ').toLowerCase();
         if(!hay.includes(q)) return false;
@@ -619,24 +786,72 @@
     return list;
   }
 
-  function render(){
-    stopAudio();
+  function openGenre(genre){
+    activeGenre = genre;
+    searchEl.value = '';
+    statusFilterEl.value = '';
+    render();
+    window.scrollTo({top: 0, behavior:'smooth'});
+  }
+
+  function exitToFolders(){
+    activeGenre = null;
+    searchEl.value = '';
+    statusFilterEl.value = '';
+    render();
+  }
+
+  function renderFolders(){
+    const groups = genreGroups();
+    const genres = Object.keys(groups).sort((a,b) => groups[b].length - groups[a].length);
+    countBadgeEl.textContent = `${genres.length} genres · ${allTracks.length} tracks`;
+    gridEl.innerHTML = `
+      <div class="section-row">
+        <h2 class="section-title">browse by genre</h2>
+        <span class="section-meta mono">tap a folder to open it</span>
+      </div>
+      ${genres.map(g => folderCardHtml(g, groups[g])).join('')}`;
+    gridEl.querySelectorAll('.folder-card').forEach(card => {
+      card.addEventListener('click', () => openGenre(card.dataset.genre));
+    });
+  }
+
+  function renderList(){
     const list = getFiltered();
+    const q = searchEl.value.trim();
     countBadgeEl.textContent = `${list.length} / ${allTracks.length}`;
+    const heading = activeGenre ? activeGenre : (q ? `results for “${q}”` : 'all tracks');
+    const backRow = `
+      <div class="back-row">
+        <button class="back-btn" id="backBtn">← all genres</button>
+        <h2 class="section-title cap">${escapeHtml(heading)}</h2>
+      </div>`;
     if(list.length === 0){
-      gridEl.innerHTML = `<div class="state" style="grid-column:1/-1;"><div class="big">nothing matches</div><div>try a different search or clear filters</div></div>`;
-      return;
+      gridEl.innerHTML = backRow + `<div class="state"><div class="big">nothing matches</div><div>try a different search or clear filters</div></div>`;
+    } else {
+      gridEl.innerHTML = backRow + list.map(cardHtml).join('');
     }
-    gridEl.innerHTML = list.map(cardHtml).join('');
+    document.getElementById('backBtn').addEventListener('click', exitToFolders);
     gridEl.querySelectorAll('.play-btn').forEach(btn => {
       btn.addEventListener('click', e => {
         e.preventDefault();
+        e.stopPropagation();
         toggleAudio(btn.dataset.preview, btn);
       });
     });
   }
 
-  [searchEl, statusFilterEl, genreFilterEl, sortByEl].forEach(el => {
+  function render(){
+    stopAudio();
+    const browsing = !activeGenre && !searchEl.value.trim() && !statusFilterEl.value;
+    if(browsing){
+      renderFolders();
+    } else {
+      renderList();
+    }
+  }
+
+  [searchEl, statusFilterEl, sortByEl].forEach(el => {
     el.addEventListener('input', render);
     el.addEventListener('change', render);
   });
